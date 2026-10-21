@@ -1,0 +1,1 @@
+No external libraries required. Runs in any modern browser using only HTML, CSS and JavaScript.
