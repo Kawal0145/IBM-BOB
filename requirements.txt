@@ -1,1 +1,2 @@
-No external libraries required. Runs in any modern browser using only HTML, CSS and JavaScript.
+# No external libraries required (Python standard library only).
+# Python 3.8 or newer. Modules used: collections, re.

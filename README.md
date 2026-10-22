@@ -1,77 +1,89 @@
 # AI-Powered Mini SOC
-### Hybrid Network Intrusion Detection and Security Incident Monitoring System
 
-A beginner-friendly, browser-based **Security Operations Center (SOC)** dashboard.  
-It loads fake network and login log entries, runs rule-based detection, and displays alerts and statistics — all inside a single HTML file with no installation required.
+**Hybrid Network Intrusion Detection and Security Incident Monitoring System**
 
----
+## Project Description
 
-## Features
+A beginner-friendly **Security Operations Center (SOC)** project that reads network and login log entries, applies rule-based detection, and reports the alerts it finds. Every alert is mapped to a **MITRE ATT&CK** technique and comes with a recommended action.
 
-- 📊 **Stat cards** — total log entries, failed logins, and alert count at a glance
-- 🚨 **Alerts table** — lists every triggered alert with type, source IP, detail, and severity badge (HIGH / MEDIUM)
-- 📋 **Full log table** — all 30 log entries displayed in a table
-- 🔴 **Red highlighting** — rows belonging to suspicious IPs are automatically highlighted in red
-- ⚡ **No installation** — pure HTML, CSS and JavaScript; opens directly in any browser
+The project comes in two forms that use the same detection rules and the same data:
 
----
+- `Kawal_MiniSOC.py`: Python command-line version that prints an alert summary.
+- `index.html`: browser dashboard with stat cards, a severity chart, a severity filter, an alerts table and a highlighted log table.
+
+## Dataset
+
+The dataset is a set of 31 hand-made (fake) log entries. Each entry has `time`, `ip`, `user`, `status`, `port` and `action`.
+
+Dataset link: https://github.com/Kawal0145/IBM-BOB/blob/main/sample_logs.js
+
+Two IPs are intentionally suspicious: `192.168.1.99` (5 failed SSH logins) and `10.0.0.55` (probes 5 different ports). The rest is normal activity.
 
 ## Detection Rules (Rule-Based, No Machine Learning)
 
-| Rule | Condition | Severity |
-|---|---|---|
-| **Brute Force Alert** | Same IP has 5 or more failed login attempts | 🔴 HIGH |
-| **Port Scan Alert** | Same IP probes 4 or more different ports | 🟡 MEDIUM |
+| Rule | Condition | Severity | MITRE ATT&CK |
+|------|-----------|----------|--------------|
+| Brute Force | Same IP has 5 or more failed logins (10 or more = Critical) | High | T1110 Brute Force |
+| Port Scan | Same IP probes 4 or more different ports | Medium | T1046 Network Service Discovery |
+| Odd-Hours Login | Successful login before 06:00 or after 22:00 | Low | T1078 Valid Accounts |
 
-Suspicious IPs in the sample data:
-- `192.168.1.99` — 5 failed SSH logins → **Brute Force Alert**
-- `10.0.0.55` — probes 5 different ports (21, 22, 23, 3306, 8080) → **Port Scan Alert**
+## Technologies Used
 
----
+| Technology | Role |
+|------------|------|
+| Python 3 (standard library only) | Command-line detection engine and report |
+| HTML5 / CSS3 | Dashboard structure and dark theme |
+| JavaScript (ES6) | Detection logic and dashboard rendering |
+| MITRE ATT&CK | Classification of every alert |
+| IBM Bob (AI assistant) | Code generation and documentation |
+
+## Setup and Run Instructions
+
+**Python version**
+
+1. Install Python 3.8 or newer (https://www.python.org/downloads/).
+2. No libraries to install. See `requirements.txt`.
+3. Open a terminal in the project folder and run:
+
+```
+python Kawal_MiniSOC.py
+```
+
+**Browser dashboard**
+
+1. Keep `index.html` and `sample_logs.js` in the same folder.
+2. Double-click `index.html`. It opens in any modern browser. No server or internet needed.
+
+## Expected Result
+
+| Metric | Value |
+|--------|-------|
+| Total log entries | 31 |
+| Failed logins | 12 |
+| Alerts triggered | 2 |
+| Brute Force alert (High) | 192.168.1.99 |
+| Port Scan alert (Medium) | 10.0.0.55 |
+| Rows from suspicious IPs | 10 |
 
 ## Folder Structure
 
 ```
 IBM-BOB/
-├── index.html          ← Dashboard (HTML + CSS + JavaScript in one file)
-├── sample_logs.js      ← 30 fake log entries as a JavaScript array
-├── requirements.txt    ← Dependency note (none required)
-├── README.md           ← This file
-└── REPORT.md           ← Project report
+├── Kawal_MiniSOC.py           Python detection script
+├── index.html                 Browser dashboard
+├── sample_logs.js             Dataset (31 fake log entries)
+├── requirements.txt           Dependency note (none required)
+├── Kawal_ProjectReport.docx   Project report
+└── README.md                  This file
 ```
 
----
+## Limitations and Future Improvements
 
-## How to Run
-
-1. Open the `IBM-BOB` folder in **File Explorer**.
-2. **Double-click `index.html`**.
-3. The dashboard opens in your default browser — done.
-
-> No Python, no Node.js, no server, no internet connection required.
-
----
-
-## Technologies Used
-
-| Technology | Role |
-|---|---|
-| HTML5 | Page structure and tables |
-| CSS3 | Dark theme styling and layout |
-| JavaScript (ES6) | Detection logic and dynamic rendering |
-
----
-
-## Future Improvements
-
-- 🤖 **Machine Learning** — replace if/else rules with a trained anomaly detection model (e.g. Isolation Forest)
-- 📁 **Real log files** — parse actual system logs (auth.log, Windows Event Logs) instead of hand-crafted data
-- 📡 **Live monitoring** — connect to a log stream or SIEM API for real-time alerts
-- 📧 **Notifications** — send email or Slack alerts when a rule is triggered
-- 🗂️ **More rules** — add detection for DDoS, SQL injection attempts, and privilege escalation
-
----
+- Logs are fake and fixed. Next step: parse real files such as Linux `auth.log`.
+- Rules use fixed thresholds and no time window. Next step: sliding time windows.
+- Replace rules with an anomaly detection model (for example Isolation Forest).
+- Add more rules (DDoS, SQL injection) and email or Slack notifications.
 
 ## Author
 
-IBM Cybersecurity Bootcamp — AI-Powered Mini SOC Project
+Kawal, IBM Cybersecurity Bootcamp, AI-Powered Mini SOC project.
